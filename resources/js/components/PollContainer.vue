@@ -136,23 +136,11 @@ export default {
                 .then(response => this.pollStats.poll = response.data)
                 .catch(err => this.errorMessage = 'Não foi possível carregar os dados.');
 
-           axios.get(`api/poll/${id}/stats`)
+            axios.get(`api/poll/${id}/stats`)
                 .then(response => this.pollStats.stats = response.data)
                 .catch(err => this.errorMessage = 'Não foi possível carregar os dados.');
 
            this.toggleModalStats();
-        },
-
-        toggleModalForm() {
-            this.isOpenModalForm = !this.isOpenModalForm;
-        },
-
-        toggleModalView() {
-            this.isOpenModalView = !this.isOpenModalView;
-        },
-
-        toggleModalStats() {
-            this.isOpenModalStats = !this.isOpenModalStats;
         },
 
         pollVote(option_id) {
@@ -169,7 +157,19 @@ export default {
                 return option.option_description || '';
             }
             return null;
-        }
+        },
+
+        toggleModalForm() {
+            this.isOpenModalForm = !this.isOpenModalForm;
+        },
+
+        toggleModalView() {
+            this.isOpenModalView = !this.isOpenModalView;
+        },
+
+        toggleModalStats() {
+            this.isOpenModalStats = !this.isOpenModalStats;
+        },
     },
 }
 </script>
@@ -190,7 +190,7 @@ html, body {
 div#container {
     display: flex;
     flex-direction: column;
-    padding: 100px 30px;
+    padding: 50px 30px;
     justify-content: space-between;
     align-items: center;
 }
