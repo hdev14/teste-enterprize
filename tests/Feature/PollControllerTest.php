@@ -89,6 +89,26 @@ class PollControllerTest extends TestCase
     }
 
      /** @test */
+    public function shouldIncreaseViewsWhenRequestAPoll()
+    {
+        $poll = Poll::factory(['poll_description' => 'test description'])
+            ->has(Option::factory()->count(3))
+            ->create();
+
+        $currentViews = $poll->views;
+        $response = $this->getJson("api/poll/$poll->id");
+        $response->assertOk();
+        $response->assertJson([
+            'poll_id' => $poll->id,
+            'poll_description' => $poll->poll_description
+        ]);
+
+        $poll->refresh();
+        $this->assertGreaterThan($currentViews, $poll->views);
+        $this->assertCount(3, $response['options']);
+    }
+
+     /** @test */
     public function shouldReturn404IfPollDoesntExists()
     {
         $fakePollId = 10;
