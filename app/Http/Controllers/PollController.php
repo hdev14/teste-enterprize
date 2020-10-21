@@ -40,6 +40,8 @@ class PollController extends Controller
     public function show($id)
     {
         $poll = Poll::findOrFail($id);
+        $poll->views++;
+        $poll->save();
 
         return response([
             'poll_id' => $poll->id,
