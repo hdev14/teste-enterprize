@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Option;
 use App\Models\Poll;
+use App\Models\Vote;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -121,7 +122,7 @@ class PollControllerTest extends TestCase
     public function shouldRegisterAVoteToOption()
     {
         $poll = Poll::factory(['poll_description' => 'test description'])
-            ->has( Option::factory()->count(1))
+            ->has(Option::factory()->count(1))
             ->create();
         $data = [ 'option_id' => $poll->options[0]->id];
 
@@ -146,6 +147,21 @@ class PollControllerTest extends TestCase
         $dataWithFakeOptionId = [ 'option_id' => 10];
         $response = $this->postJson("api/poll/$poll->id/vote", $dataWithFakeOptionId);
         $response->assertStatus(404);
+    }
+
+    /** @test */
+    public function shouldReturnStats()
+    {
+        $poll = Poll::factory(['poll_description' => 'test description'])
+            ->hasOptions(1)
+            ->create();
+        Vote::factory(['option_id' =>$poll->options[0]->id])->createOne();
+
+        $response = $this->getJson("api/poll/$poll->id/stats");
+
+        $response->assertOk();
+        $response->assertJson(['views' => $poll->views]);
+        $this->assertCount(1, $response['votes']);
     }
 
 }
