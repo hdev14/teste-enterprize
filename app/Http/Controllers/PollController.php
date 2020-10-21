@@ -8,16 +8,6 @@ use Illuminate\Http\Request;
 class PollController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -58,6 +48,24 @@ class PollController extends Controller
         ], 200);
     }
 
+    public function registerVote(Request $request, int $id)
+    {
+        $poll = Poll::findOrFail($id);
+        $option_id = $request->get('option_id');
+
+        $option = $poll->options()->where('id', $option_id)->firstOrFail();
+        $vote = $option->votes()->where('option_id', $option->id)->first();
+
+        if (!$vote) {
+            $option->votes()->create(['qty' => 1]);
+
+        } else {
+            $vote->qty++;
+            $vote->save();
+        }
+
+        return response([], 204);
+    }
     /**
      * Update the specified resource in storage.
      *

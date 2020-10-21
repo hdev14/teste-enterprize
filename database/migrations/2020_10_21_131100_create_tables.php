@@ -29,6 +29,7 @@ class CreateTables extends Migration
         });
 
         Schema::create('votes', function (Blueprint $table) {
+            $table->integer('qty')->default(0);
             $table->unsignedBigInteger('option_id');
             $table->foreign('option_id')->references('id')->on('options');
             $table->timestamps();
