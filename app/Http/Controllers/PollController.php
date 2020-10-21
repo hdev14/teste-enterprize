@@ -49,7 +49,7 @@ class PollController extends Controller
      */
     public function show($id)
     {
-        $poll = Poll::find($id);
+        $poll = Poll::findOrFail($id);
 
         return response([
             'poll_id' => $poll->id,
