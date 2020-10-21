@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/poll', [App\Http\Controllers\PollController::class, 'index']);
 Route::post('/poll', [App\Http\Controllers\PollController::class, 'store']);
 Route::get('/poll/{id}', [App\Http\Controllers\PollController::class, 'show']);
 Route::post('/poll/{id}/vote', [App\Http\Controllers\PollController::class, 'registerVote']);

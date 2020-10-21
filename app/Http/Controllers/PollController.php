@@ -7,12 +7,13 @@ use Illuminate\Http\Request;
 
 class PollController extends Controller
 {
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
+    public function index()
+    {
+        $polls = Poll::all();
+        return response($polls, 200);
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([
