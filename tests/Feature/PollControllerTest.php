@@ -97,23 +97,35 @@ class PollControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-//    /** @test */
-//    public function shouldRegisterAVoteToOption()
-//    {
-//        $option = Option::factory()->make();
-//        Poll::factory(['poll_description' => 'test description'])
-//            ->has($option)
-//            ->create();
-//        $option->refresh();
-//
-//        $response = $this->postJson("api/poll/$option->id/vote");
-//        $response->assertOk();
-//        $response->assertJson([
-//            'poll_id' => $poll->id,
-//            'poll_description' => $poll->poll_description
-//        ]);
-//
-//        $this->assertCount(3, $response['options']);
-//    }
+    /** @test */
+    public function shouldRegisterAVoteToOption()
+    {
+        $poll = Poll::factory(['poll_description' => 'test description'])
+            ->has( Option::factory()->count(1))
+            ->create();
+        $data = [ 'option_id' => $poll->options[0]->id];
+
+        $response = $this->postJson("api/poll/$poll->id/vote", $data);
+        $response->assertStatus(204);
+
+        $this->assertDatabaseHas('votes', ['option_id' => $data['option_id']]);
+    }
+
+    /** @test */
+    public function OnRegisterVoteShouldReturn404ifPollDoesntExists()
+    {
+        $fakePollId = 10;
+        $response = $this->postJson("api/poll/$fakePollId/vote", []);
+        $response->assertStatus(404);
+    }
+
+    /** @test */
+    public function OnRegisterVoteShouldReturn404ifOptionDoesntExists()
+    {
+        $poll = Poll::factory(['poll_description' => 'test description'])->create();
+        $dataWithFakeOptionId = [ 'option_id' => 10];
+        $response = $this->postJson("api/poll/$poll->id/vote", $dataWithFakeOptionId);
+        $response->assertStatus(404);
+    }
 
 }
