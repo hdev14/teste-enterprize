@@ -25,7 +25,6 @@ class PollController extends Controller
      */
     public function store(Request $request)
     {
-
         $data = $request->validate([
             'poll_description' => 'required|string',
             'options' => 'required'
@@ -35,8 +34,8 @@ class PollController extends Controller
             'poll_description' => $data['poll_description']
         ]);
 
-        $poll->options()->createMany(array_map(function ($item) {
-            return ['option_description' => $item];
+        $poll->options()->createMany(array_map(function ($op) {
+            return ['option_description' => $op];
         }, $data['options']));
 
         return response([ 'poll_id' => $poll->id], 201);
@@ -50,7 +49,13 @@ class PollController extends Controller
      */
     public function show($id)
     {
-        //
+        $poll = Poll::find($id);
+
+        return response([
+            'poll_id' => $poll->id,
+            'poll_description' => $poll->poll_description,
+            'options' => $poll->options
+        ], 200);
     }
 
     /**
