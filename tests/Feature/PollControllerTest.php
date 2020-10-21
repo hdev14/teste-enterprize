@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\Option;
+use App\Models\Poll;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -24,7 +26,6 @@ class PollControllerTest extends TestCase
         ];
 
         $response = $this->postJson('/api/poll', $data);
-        $response->dump();
         $response->assertStatus(201);
 
         $this->assertDatabaseHas('polls', [ 'id' => $response['poll_id']]);
@@ -69,4 +70,22 @@ class PollControllerTest extends TestCase
         $this->postJson('/api/poll', $dataWithInvalidOptions)
             ->assertStatus(422);
     }
+
+    /** @test */
+    public function shouldReturnAPoll()
+    {
+        $poll = Poll::factory(['poll_description' => 'test description'])
+            ->has(Option::factory()->count(3))
+            ->create();
+
+        $response = $this->getJson("api/poll/$poll->id");
+        $response->assertOk();
+        $response->assertJson([
+            'poll_id' => $poll->id,
+            'poll_description' => $poll->poll_description
+        ]);
+
+        $this->assertCount(3, $response['options']);
+    }
+
 }
