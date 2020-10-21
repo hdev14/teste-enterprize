@@ -18,8 +18,8 @@ class Option extends Model
         return $this->attributes['option_id'] = $this->attributes['id'];
     }
 
-    public function votes()
+    public function vote()
     {
-        return $this->hasMany('App\Models\Vote');
+        return $this->hasOne('App\Models\Vote');
     }
 }

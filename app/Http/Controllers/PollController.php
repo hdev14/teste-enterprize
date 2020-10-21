@@ -56,10 +56,10 @@ class PollController extends Controller
         $option_id = $request->get('option_id');
 
         $option = $poll->options()->where('id', $option_id)->firstOrFail();
-        $vote = $option->votes()->where('option_id', $option->id)->first();
+        $vote = $option->vote()->where('option_id', $option->id)->first();
 
         if (!$vote) {
-            $option->votes()->create(['qty' => 1]);
+            $option->vote()->create(['qty' => 1]);
 
         } else {
             $vote->qty++;
@@ -68,6 +68,26 @@ class PollController extends Controller
 
         return response([], 204);
     }
+
+    public function stats(int $id)
+    {
+        $poll = Poll::findOrFail($id);
+        $options = $poll->options;
+        $votes = [];
+        foreach ($options as $op) {
+            $vote = $op->vote()->first();
+            array_push($votes, [
+                'option_id' => $vote->option_id,
+                'qty' => $vote->qty
+            ]);
+        }
+
+        return response([
+            'views' => $poll->views,
+            'votes' => $votes
+        ], 200);
+    }
+
     /**
      * Update the specified resource in storage.
      *

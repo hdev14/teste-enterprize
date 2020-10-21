@@ -16,3 +16,4 @@ use Illuminate\Support\Facades\Route;
 Route::post('/poll', [App\Http\Controllers\PollController::class, 'store']);
 Route::get('/poll/{id}', [App\Http\Controllers\PollController::class, 'show']);
 Route::post('/poll/{id}/vote', [App\Http\Controllers\PollController::class, 'registerVote']);
+Route::get('/poll/{id}/stats', [App\Http\Controllers\PollController::class, 'stats']);
