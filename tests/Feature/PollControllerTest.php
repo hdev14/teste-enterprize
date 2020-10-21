@@ -115,7 +115,7 @@ class PollControllerTest extends TestCase
         $fakePollId = 10;
 
         $response = $this->getJson("api/poll/$fakePollId");
-        $response->assertStatus(404);
+        $response->assertNotFound();
     }
 
     /** @test */
@@ -137,7 +137,7 @@ class PollControllerTest extends TestCase
     {
         $fakePollId = 10;
         $response = $this->postJson("api/poll/$fakePollId/vote", []);
-        $response->assertStatus(404);
+        $response->assertNotFound();
     }
 
     /** @test */
@@ -146,7 +146,7 @@ class PollControllerTest extends TestCase
         $poll = Poll::factory(['poll_description' => 'test description'])->create();
         $dataWithFakeOptionId = [ 'option_id' => 10];
         $response = $this->postJson("api/poll/$poll->id/vote", $dataWithFakeOptionId);
-        $response->assertStatus(404);
+        $response->assertNotFound();
     }
 
     /** @test */
@@ -162,6 +162,13 @@ class PollControllerTest extends TestCase
         $response->assertOk();
         $response->assertJson(['views' => $poll->views]);
         $this->assertCount(1, $response['votes']);
+    }
+
+    /** @test */
+    public function OnStatsShouldReturn404IfPollDoesntExists()
+    {
+        $fakePollId = 10;
+        $this->getJson("api/poll/$fakePollId/stats")->assertNotFound(404);
     }
 
 }
