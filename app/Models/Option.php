@@ -11,7 +11,9 @@ class Option extends Model
 
     protected $fillable = ['option_description'];
 
-    protected $hidden = ['id', 'created_at', 'updated_at'];
+    protected $hidden = ['id', 'poll_id', 'created_at', 'updated_at'];
+
+    protected $appends = ['option_id'];
 
     public function getOptionIdAttribute()
     {

@@ -130,6 +130,9 @@ class PollControllerTest extends TestCase
         $response->assertStatus(204);
 
         $this->assertDatabaseHas('votes', ['option_id' => $data['option_id']]);
+
+        $response = $this->postJson("api/poll/$poll->id/vote", $data);
+        $response->assertStatus(204);
     }
 
     /** @test */

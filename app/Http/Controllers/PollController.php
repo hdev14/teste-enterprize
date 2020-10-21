@@ -60,10 +60,9 @@ class PollController extends Controller
 
         if (!$vote) {
             $option->vote()->create(['qty' => 1]);
-
         } else {
             $vote->qty++;
-            $vote->save();
+            $vote->update();
         }
 
         return response([], 204);
@@ -74,12 +73,15 @@ class PollController extends Controller
         $poll = Poll::findOrFail($id);
         $options = $poll->options;
         $votes = [];
+
         foreach ($options as $op) {
             $vote = $op->vote()->first();
-            array_push($votes, [
-                'option_id' => $vote->option_id,
-                'qty' => $vote->qty
-            ]);
+            if ($vote) {
+                array_push($votes, [
+                    'option_id' => $vote->option_id,
+                    'qty' => $vote->qty
+                ]);
+            }
         }
 
         return response([
