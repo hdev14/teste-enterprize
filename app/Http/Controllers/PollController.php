@@ -26,7 +26,10 @@ class PollController extends Controller
     public function store(Request $request)
     {
 
-        $data = $request->only(['poll_description', 'options']);
+        $data = $request->validate([
+            'poll_description' => 'required|string',
+            'options' => 'required'
+        ]);
 
         $poll = Poll::create([
             'poll_description' => $data['poll_description']
