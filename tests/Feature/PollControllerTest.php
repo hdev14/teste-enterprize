@@ -88,4 +88,32 @@ class PollControllerTest extends TestCase
         $this->assertCount(3, $response['options']);
     }
 
+     /** @test */
+    public function shouldReturn404IfPollDoesntExists()
+    {
+        $fakePollId = 10;
+
+        $response = $this->getJson("api/poll/$fakePollId");
+        $response->assertStatus(404);
+    }
+
+//    /** @test */
+//    public function shouldRegisterAVoteToOption()
+//    {
+//        $option = Option::factory()->make();
+//        Poll::factory(['poll_description' => 'test description'])
+//            ->has($option)
+//            ->create();
+//        $option->refresh();
+//
+//        $response = $this->postJson("api/poll/$option->id/vote");
+//        $response->assertOk();
+//        $response->assertJson([
+//            'poll_id' => $poll->id,
+//            'poll_description' => $poll->poll_description
+//        ]);
+//
+//        $this->assertCount(3, $response['options']);
+//    }
+
 }
