@@ -28,3 +28,11 @@ as migrações, que são responsaveis por criar o schema do banco. Basta executa
  - Execute o camando ```php artisan serve```.
  
  Acesse a URL http://localhost:8000/.
+ 
+ 
+ 
+ ## TDD
+ 
+ O desenvolvimento desse projeto foi todo orientado pela metodologia Test Driven Developmenet(TDD). Por
+  isso foram adicionados testes de integração. Para executar os testes, basta digitar esse comando
+   ```php artisan test```.
